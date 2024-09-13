@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uma surpresinha...</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-image: url('fundo.jpg');
+            background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            height: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .drop-zone {
+            margin: 15px;
+            border: 2px solid #ff69b4;
+            border-radius: 15px;
+            width: 100px;
+            height: 100px;
+            background-color: #ffebcd;
+            background-size: cover;
+            background-position: center;
+            transition: background-color 0.3s ease;
+        }
+        .draggable {
+            margin: 15px;
+            border: 2px solid #ff69b4;
+            border-radius: 15px;
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            background-size: cover;
+            background-position: center;
+            cursor: grab;
+        }
+        .draggable:active {
+            cursor: grabbing;
+        }
+
+        #fixed-image2 {
+    width: 120px;  /* Reduzido de 150px */
+    height: 120px; /* Reduzido de 150px */
+    background-image: url('fixedImage2.jpg'); /* Substitua com a imagem fixa do segundo jogo */
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.draggable2 {
+    width: 80px; 
+    height: 80px; 
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    position: absolute;
+    cursor: grab;
+    transition: transform 0.2s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.draggable2:active {
+    transform: scale(1.1);
+}
+
+/* Reposicionamento para maior espaçamento */
+#drag21 { top: 20%; left: 50%; transform: translate(-50%, -50%); background-image: url('dragImage1.jpg');}
+#drag22 { top: 35%; left: 75%; transform: translate(-50%, -50%); background-image: url('dragImage2.jpg');}
+#drag23 { top: 65%; left: 75%; transform: translate(-50%, -50%); background-image: url('dragImage3.jpg');}
+#drag24 { top: 80%; left: 50%; transform: translate(-50%, -50%); background-image: url('dragImage4.jpg');}
+#drag25 { top: 65%; left: 25%; transform: translate(-50%, -50%); background-image: url('dragImage5.jpg');}
+#drag26 { top: 35%; left: 25%; transform: translate(-50%, -50%); background-image: url('dragImage6.jpg');}
+
+#img1 {background-image: url('grade1.jpg');}
+#img2 {background-image: url('grade2.jpg');}
+#img3 {background-image: url('grade3.jpg');}
+#img4 {background-image: url('grade4.jpg');}
+#img5 {background-image: url('grade5.jpg');}
+#img6 {background-image: url('grade6.jpg');}
+#img7 {background-image: url('grade7.jpg');}
+#img8 {background-image: url('grade8.jpg');}
+#img9 {background-image: url('grade9.jpg');}
+    
+    .grid-item {background-size: cover;
+            background-position: center;}
+    
+.jogo {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    opacity: 0; /* Inicialmente invisível */
+    transition: opacity 1s ease; /* Animação suave */
+    flex-direction: column;
+}
+
+    .overlay.show {
+    display: flex;
+    opacity: 1; /* Torna a mensagem visível com transição */
+}
+    
+    .overlay button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .overlay button:hover {
+            background-color: #45a049;
+        }
+    
+
+/* Estilo para a grade */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas iguais */
+    grid-gap: 10px; /* Espaçamento entre as imagens */
+    max-width: 500px; /* Tamanho máximo para a grade */
+    margin: 0 auto; /* Centraliza a grade na tela */
+    padding: 20px;
+}
+
+.grid-item {
+    width: 100%;
+    height: 100px; /* Altura das imagens */
+    background-color: #ddd;
+    border: 2px solid #ff69b4; /* Contorno inicial transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+/* Contorno verde para imagens corretas */
+.grid-item.certa {
+    border-color: green;
+}
+    
+    /* Estilo para a tela final */
+.tela-final-container {
+    text-align: center;
+    padding: 50px;
+}
+
+.imagem-final {
+     margin: 5px;
+            border: 2px solid #ff69b4;
+            border-radius: 5px;
+            width: 100px;
+            height: 150px;
+            background-color: #fff;
+            background-size: cover;
+            background-position: center;
+}
+
+.texto-final {
+    border: 2px solid #ff69b4;
+            border-radius: 5px;
+    background-color: #fff;
+            background-size: cover;
+            background-position: center;
+    font-size: 12px;
+    color: #333;
+    margin-top: 10px;
+    font-family: Arial, sans-serif; /* Ajuste a fonte se desejar */
+}
+
+    
+    </style>
+</head>
+<audio id="background-music" autoplay loop>
+  <source src="musica.mp3" type="audio/mpeg">
+  Seu navegador não suporta a tag de áudio.
+</audio>
+<body>
+    <!-- Jogo 1 -->
+    <div id="jogo1" class="jogo">
+    <h1 style="text-align: center; color: #ff69b4; margin-top: 20px; margin-bottom: 0px; padding-bottom: 0px;">Arraste para o personagem aquilo que ele precisa</h1>
+    <div class="container">
+        <div class="column">
+            <!-- Imagens Fixas -->
+            <div id="target1" class="drop-zone" data-pair="1" style="background-image: url('fixed1.jpg');"></div>
+            <div id="target2" class="drop-zone" data-pair="2" style="background-image: url('fixed2.jpg');"></div>
+            <div id="target3" class="drop-zone" data-pair="3" style="background-image: url('fixed3.jpg');"></div>
+        </div>
+        
+        <div class="column">
+            <!-- Imagens Arrastáveis -->
+            <div id="drag1" class="draggable" draggable="true" data-pair="1" style="background-image: url('img1.jpg');" ondragstart="drag(event)"></div>
+            <div id="drag2" class="draggable" draggable="true" data-pair="2" style="background-image: url('img2.jpg');" ondragstart="drag(event)"></div>
+            <div id="drag3" class="draggable" draggable="true" data-pair="3" style="background-image: url('img3.jpg');" ondragstart="drag(event)"></div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay1">
+            Eu aposto que um site pro seu aniversário era a última coisa que você esperava. Quem em sã consciência ficaria 1 mês programando isso? Por que não só comprar algo qualquer? Por que não falar só coisinhas bonitas como todo mundo faz? Por que se dar tanto trabalho? Simples, a pessoa que tá recebendo isso merece esse tipo de coisa, o tipo de ideia louca que aparece na mente, mas que ao invés de vc falar "ah, deixa pra lá, não vale o preço mesmo", você lembra de como é a pessoa pra qual vc tá fazendo, do que ela faz não só por você, mas por todos a volta dela, e de como ela é especial e mudou não só a sua forma de pensar e agir como de ser.
+            <button onclick="irParaProximoJogo(2)">Próximo Jogo</button>
+        </div>
+    </div>
+    
+    <!-- Jogo 2 -->
+    <div id="jogo2" class="jogo" style="display: none;">
+        <h2 style="text-align: center; color: #ff69b4; margin-top: 20px; margin-bottom: 0px; padding-bottom: 0px;">Dê para a Yasmin apenaabo que ela gosta</h2>
+        <div id="fixed-image2"></div>
+
+    <div class="draggable2" id="drag21" data-pair="1" draggable="true"></div>
+    <div class="draggable2" id="drag22" data-pair="4" draggable="true"></div>
+    <div class="draggable2" id="drag23" data-pair="5" draggable="true"></div>
+    <div class="draggable2" id="drag24" data-pair="2" draggable="true"></div>
+    <div class="draggable2" id="drag25" data-pair="3" draggable="true"></div>
+    <div class="draggable2" id="drag26" data-pair="6" draggable="true"></div>
+    
+        <div class="overlay" id="overlay2">
+            Você, Yasmin, espalha não só amor e ternura por onde passa, mas principalmente riso, você é MUITO engraçada, porque teu sorriso é muito contagiante, eu não sei se é o jeito da sua risada, se os seus dentes criam alguma química que me faz querer acompanhar vc aonde estiver, imitando sua forma, seu comportamento, não sei, mas tu faz isso comigo, e com certeza alegra a vida de quem vive contigo, mesmo que não demonstrem. Você faz eu ler o que você lê, ouçar o que você ouça, e querer ser lindo como você é, como seus cabelos são, como tudo em você encanta, e faria até o mais sem emoção dos homens ficar bobo te vendo na rua. Você é perfeita, Yasmin!
+            <button onclick="irParaProximoJogo(3)">Próximo Jogo</button>
+        </div>
+    </div>
+
+<!-- Jogo 3 -->
+<div id="jogo3" class="jogo" style="display: none;">
+    <h1 style="text-align: center; color: #ff69b4; margin-top: 20px; margin-bottom: 0px; padding-bottom: 0px;">Clique nos 6 presentes que você ganhou do Danilo</h1>
+    <div class="grid-container">
+        <div class="grid-item" id="img1"></div>
+        <div class="grid-item" id="img2"></div>
+        <div class="grid-item" id="img3"></div>
+        <div class="grid-item" id="img4"></div>
+        <div class="grid-item" id="img5"></div>
+        <div class="grid-item" id="img6"></div>
+        <div class="grid-item" id="img7"></div>
+        <div class="grid-item" id="img8"></div>
+        <div class="grid-item" id="img9"></div>
+  <div class="overlay" id="overlay3">
+            Ué? tá faltando um, cadê?
+            <button onclick="irParaProximoJogo(4)">???</button>
+        </div>
+        </div>
+    </div>
+ <!-- Tela Final -->
+<div id="jogo4" class="jogo" style="display: none;">
+    <div class="tela-final-container">
+        <img src="especial.jpg" alt="Imagem Final" class="imagem-final">
+        <p class="texto-final">É isso, feliz aniversário, essa data não é muito boa pra ti, eu sei, mas espero que tenha pelo menos esboçado um sorriso com isso kkkkkk. Esse presente só representa uma pequena parte do que você é, porque você não é só a Yasmin dos livros, que ama romance e principalmente os contos da Ali, mas também a Yasmin da academia, que quer pq quer alcançar o porte da Abby, a Yasmin estudiosa, que odeia matemática com todas as forças e almeja a Medicina Veterinária, a Yasmim dos animais, que cuidou e continuará cuidando dos bixinhos que mais amo (Mana, Yara e Fiona), a Yasmin dos animes, que me fez ficar triste e chorar muitas vezes com o Gege e o Isayama, a Yasmim do Alanzoka, que eu prometo amor, seremos como ele e a Maethe, a Yasmin do Sergipe, que eu quero tanto viver com, comer caranguejo e acarajé do teu lado, e olhar sua reação ao me ver fazer cara de nojo depois que eu botar um pedaço na boca. Muitas, muitas Yasmines vivem dentro de ti, e eu amo todas elas, e a todas dedico esse site e esse presente. Feliz aniversário, eu te amo.
+</p>
+    </div>
+
+    <script>
+    let html = document.querySelector("html");
+        let musica = document.querySelector("#musica");
+        html.addEventListener('click', () => {
+            musica.play();
+        })
+
+    
+        let correctMatches = 0;
+let jogoAtual = 1; // Controle de qual jogo está ativo
+
+function allowDrop(event) {
+    event.preventDefault();
+}
+
+function drag(event) {
+    event.dataTransfer.setData("text", event.target.id);
+}
+
+function drop(event) {
+    event.preventDefault();
+    let data = event.dataTransfer.getData("text");
+    let draggedElement = document.getElementById(data);
+    let dropZone = event.target;
+
+    if (dropZone.getAttribute('data-pair') === draggedElement.getAttribute('data-pair')) {
+        dropZone.style.backgroundImage = `url('newImage${dropZone.getAttribute('data-pair')}.jpg')`;
+        draggedElement.style.display = 'none';
+        dropZone.style.backgroundColor = "#98fb98";
+        correctMatches++;
+
+        if (correctMatches === 3) {
+            mostrarOverlay('overlay' + jogoAtual); // Mostra a overlay correspondente ao jogo atual
+        }
+    }
+}
+
+function mostrarOverlay(overlayId) {
+    const overlay = document.getElementById(overlayId);
+    overlay.style.display = 'flex';
+    setTimeout(() => {
+        overlay.classList.add('show');
+    }, 10);
+}
+
+function irParaProximoJogo(jogo) {
+    correctMatches = 0; // Reseta a contagem para o próximo jogo
+    document.querySelectorAll('.jogo').forEach(jogo => {
+        jogo.style.display = 'none';
+    });
+
+    document.getElementById('jogo' + jogo).style.display = 'block';
+    jogoAtual = jogo; // Atualiza o jogo atual
+}
+
+document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.addEventListener('dragover', allowDrop);
+    zone.addEventListener('drop', drop);
+});
+
+function allowDrop2(event) {
+    event.preventDefault();
+}
+
+function drag2(event) {
+    event.dataTransfer.setData("text", event.target.id);
+}
+
+function drop2(event) {
+    event.preventDefault();
+    let data = event.dataTransfer.getData("text");
+    let draggedElement = document.getElementById(data);
+    let dropZone = document.getElementById('fixed-image2');
+
+    // Verifica se a imagem arrastada é uma das corretas
+    if (draggedElement && draggedElement.getAttribute('data-pair') <= 3) {
+        // Atualiza o background da área fixa (sem remover a área fixa)
+        dropZone.style.backgroundImage = `url('fixedImage2.jpg')`;
+        // Esconde ou remove a imagem arrastável após a correspondência correta
+        draggedElement.style.visibility = 'hidden'; // Alternativa: draggedElement.remove();
+
+        // Incrementa a contagem de acertos
+        correctMatches++;
+
+        // Se acertou todas as três, mostra a overlay
+        if (correctMatches === 3) {
+            mostrarOverlay('overlay2'); // Mostra a overlay do jogo 2
+        }
+    }
+}
+
+
+document.querySelectorAll('.draggable2').forEach(draggable => {
+    draggable.addEventListener('dragstart', drag2);
+});
+document.getElementById('fixed-image2').addEventListener('dragover', allowDrop2);
+document.getElementById('fixed-image2').addEventListener('drop', drop2);
+    
+    
+    // IDs das 5 imagens corretas inicialmente
+const imagensCertas = ['img1', 'img3', 'img5', 'img7', 'img9'];
+let clicadasCertas = 0;
+
+// Clique nas imagens
+document.querySelectorAll('.grid-item').forEach(item => {
+    item.addEventListener('click', function() {
+        if (imagensCertas.includes(this.id) && !this.classList.contains('certa')) {
+            this.classList.add('certa');
+            clicadasCertas++;
+            verificarJogo3();
+        }
+    });
+});
+
+function verificarJogo3() {
+    if (clicadasCertas === 5) {
+       mostrarOverlay('overlay3');
+    }
+}
+
+
+    </script>
+</body>
+</html>
+
